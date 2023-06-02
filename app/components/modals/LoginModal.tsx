@@ -28,7 +28,6 @@ const LoginModal: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    register,
     handleSubmit,
     formState: { errors },
     reset,
@@ -54,15 +53,17 @@ const LoginModal: React.FC = () => {
 
     setIsLoading(false);
 
-    if (response?.ok) {
+    if (response?.ok && !response?.error) {
       toast.success("Logged in");
       router.refresh();
       loginModal.onClose();
     }
 
-    if (response?.error) {
+    if (response?.error && response.error !== "NEXT_REDIRECT") {
       toast.error(response.error);
     }
+
+    loginModal.onClose();
   };
 
   const onOpenRegisterModal = () => {

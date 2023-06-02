@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import NextAuth, { AuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
@@ -11,6 +12,10 @@ import prisma from "@/app/libs/prismadb";
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
+    EmailProvider({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
+    }),
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
@@ -35,6 +40,10 @@ export const authOptions: AuthOptions = {
             email: credentials.email,
           },
         });
+
+        if (!user?.emailVerified) {
+          redirect("/activate-email");
+        }
 
         if (!user || !user.hashedPassword) {
           throw new Error("Invalid credentials");
@@ -64,4 +73,6 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-export default NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };

@@ -18,11 +18,13 @@ import { toast } from "react-hot-toast";
 import Button from "../Button";
 import { signIn } from "next-auth/react";
 import useLoginModal from "@/app/hooks/useLoginModal";
+import { useRouter } from "next/navigation";
 
 const RegisterModal: React.FC = () => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -54,7 +56,7 @@ const RegisterModal: React.FC = () => {
       reset();
       toast.success("Account successfully created");
       registerModal.onClose();
-      loginModal.onOpen();
+      router.push("/activate-email");
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
