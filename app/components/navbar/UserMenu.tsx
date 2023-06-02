@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "../Avatar";
 import MenuItem from "./MenuItem";
@@ -19,6 +20,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const rentModal = useRentModal();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -60,10 +62,23 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
               <div className="flex flex-col cursor-pointer">
                 {currentUser ? (
                   <>
-                    <MenuItem label="My trips" onClick={() => {}} />
-                    <MenuItem label="My favorites" onClick={() => {}} />
-                    <MenuItem label="My reservations" onClick={() => {}} />
-                    <MenuItem label="My properties" onClick={() => {}} />
+                    <MenuItem label="Home" onClick={() => router.push("/")} />
+                    <MenuItem
+                      label="My trips"
+                      onClick={() => router.push("/trips")}
+                    />
+                    <MenuItem
+                      label="My favorites"
+                      onClick={() => router.push("/favorites")}
+                    />
+                    <MenuItem
+                      label="My reservations"
+                      onClick={() => router.push("/reservations")}
+                    />
+                    <MenuItem
+                      label="My properties"
+                      onClick={() => router.push("/properties")}
+                    />
                     <MenuItem
                       label="Airbnb my home"
                       onClick={rentModal.onOpen}

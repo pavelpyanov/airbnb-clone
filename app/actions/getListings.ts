@@ -3,16 +3,21 @@ import { SafeListing } from "../types";
 
 export interface ListingParams {
   category?: string;
+  userId?: string;
 }
 
 export default async function getListings(
   params: ListingParams
 ): Promise<SafeListing[]> {
-  const { category } = params;
+  const { category, userId } = params;
   const query: any = {};
 
   if (category) {
     query.category = category;
+  }
+
+  if (userId) {
+    query.userId = userId;
   }
 
   try {

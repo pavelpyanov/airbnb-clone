@@ -9,8 +9,14 @@ interface LoginModalStore {
 const useRentModal = create<LoginModalStore>((set) => {
   return {
     isOpen: false,
-    onOpen: () => set({ isOpen: true }),
-    onClose: () => set({ isOpen: false }),
+    onOpen: () => {
+      document.body.style.overflow = "hidden";
+      set({ isOpen: true });
+    },
+    onClose: () => {
+      document.body.style.overflow = "auto";
+      set({ isOpen: false });
+    },
   };
 });
 

@@ -5,7 +5,12 @@ import axios from "axios";
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import useRegisterModal from "@/app/hooks/useRegister";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import {
+  Controller,
+  FieldValues,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import Modal from "./Modal";
 import Heading from "../navbar/Heading";
 import Input from "../inputs/Input";
@@ -20,10 +25,10 @@ const RegisterModal: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    register,
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm<FieldValues>({
     defaultValues: {
       name: "",
@@ -49,6 +54,7 @@ const RegisterModal: React.FC = () => {
       reset();
       toast.success("Account successfully created");
       registerModal.onClose();
+      loginModal.onOpen();
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
@@ -59,28 +65,52 @@ const RegisterModal: React.FC = () => {
   const bodyContent = (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <Heading title="Welcome to airbnb" subTitle="Create am account" />
-      <Input
-        id="name"
-        label="Name"
-        disabled={isLoading}
-        errors={errors}
-        required
+
+      <Controller
+        name="name"
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <Input
+            {...field}
+            id="name"
+            label="Name"
+            disabled={isLoading}
+            errors={errors}
+            required
+          />
+        )}
       />
-      <Input
-        id="email"
-        label="Email"
-        disabled={isLoading}
-        errors={errors}
-        required
+      <Controller
+        name="email"
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <Input
+            {...field}
+            id="email"
+            label="Email"
+            disabled={isLoading}
+            errors={errors}
+            required
+          />
+        )}
       />
-      <Input
-        id="password"
-        label="Password"
-        disabled={isLoading}
-        errors={errors}
-        required
-        type="password"
-        autoComplete="off"
+      <Controller
+        name="password"
+        control={control}
+        render={({ field }) => (
+          <Input
+            {...field}
+            id="password"
+            label="Password"
+            disabled={isLoading}
+            errors={errors}
+            required
+            type="password"
+            autoComplete="off"
+          />
+        )}
       />
     </form>
   );

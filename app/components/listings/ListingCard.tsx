@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Listing, Reservation } from "@prisma/client";
-import { SafeListing, SafeUser } from "@/app/types";
+import { SafeListing, SafeReservation, SafeUser } from "@/app/types";
 import { useRouter } from "next/navigation";
 import useCountries from "@/app/hooks/useCountries";
 import { format } from "date-fns";
 import Image from "next/image";
 import HeartButton from "../HeartButton";
+import Button from "../Button";
 
 interface ListingCardProps {
   data: SafeListing;
-  reservation?: Reservation;
+  reservation?: SafeReservation;
   onAction?: (id: string) => void;
   disabled?: boolean;
   actionLabel?: string;
@@ -72,7 +72,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
             fill
             priority
             alt="Listing"
-            src={data.imageSrc}
+            src={data.imageSrc.replace("upload/", "upload/q_auto:low/")}
             className="object-cover h-full w-full group-hover:scale-110 transition"
           />
           <div className="absolute top-3 right-3">
@@ -85,6 +85,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <div className="font-light text-neutral-500">
           {reservationDate || data.category}
         </div>
+        {actionLabel && onAction && (
+          <Button
+            label={actionLabel}
+            onClick={handleCancel}
+            disabled={disabled}
+          />
+        )}
       </div>
     </div>
   );

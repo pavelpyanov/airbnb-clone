@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import {
+  Controller,
+  FieldValues,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { signIn } from "next-auth/react";
 
@@ -27,6 +32,7 @@ const LoginModal: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm<FieldValues>({
     defaultValues: {
       email: "",
@@ -67,21 +73,37 @@ const LoginModal: React.FC = () => {
   const bodyContent = (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <Heading title="Welcome back" subTitle="Log in to your account" />
-      <Input
-        id="email"
-        label="Email"
-        disabled={isLoading}
-        errors={errors}
-        required
+      <Controller
+        name="email"
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <Input
+            {...field}
+            id="email"
+            label="Email"
+            disabled={isLoading}
+            errors={errors}
+            required
+          />
+        )}
       />
-      <Input
-        id="password"
-        label="Password"
-        disabled={isLoading}
-        errors={errors}
-        required
-        type="password"
-        autoComplete="off"
+      <Controller
+        name="password"
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <Input
+            {...field}
+            id="password"
+            label="Password"
+            disabled={isLoading}
+            errors={errors}
+            required
+            type="password"
+            autoComplete="off"
+          />
+        )}
       />
     </form>
   );

@@ -11,7 +11,6 @@ import {
   FieldValues,
   SubmitHandler,
   useForm,
-  FormProvider,
   Controller,
 } from "react-hook-form";
 import CountrySelect, { CountrySelectValue } from "../inputs/CountrySelect";
@@ -51,13 +50,11 @@ const RentModal: React.FC = () => {
   const [image, setImage] = useState<null | File>(null);
 
   const {
-    register,
     handleSubmit,
     setValue,
     watch,
     formState: { errors },
     reset,
-    getValues,
     control,
   } = useForm<CreateListingData>({
     defaultValues: {
@@ -116,7 +113,7 @@ const RentModal: React.FC = () => {
 
       await axios.request<string>({
         method: "POST",
-        url: "/api/create-listing",
+        url: "/api/listing",
         data: formData,
         headers: {
           "content-type": "multipart/form-data",
