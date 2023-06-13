@@ -19,6 +19,7 @@ model User {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   favoriteIds    String[]
+  hash           String        @default(uuid())
   accounts       Account[]
   listings       Listing[]
   reservation    Reservation[]

@@ -20,6 +20,7 @@ import Input from "../inputs/Input";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Loader from "../Loader";
 
 enum STEPS {
   CATEGORY = 0,
@@ -139,7 +140,7 @@ const RentModal: React.FC = () => {
         ssr: false,
         loading: () => (
           <div className="h-[35vh] flex justify-center items-center">
-            Loading...
+            <Loader />
           </div>
         ),
       }),

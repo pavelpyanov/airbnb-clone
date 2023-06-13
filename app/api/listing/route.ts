@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import { randomUUID } from "crypto";
 
 import { CreateListingData } from "@/app/components/modals/RentModal";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/app/libs/prismadb";
 import axios from "axios";
-import cloudinary from "cloudinary";
 
 // const uploadImage = async (imagePath) => {
 //   // Use the uploaded file's name as the asset's public ID and
@@ -34,7 +31,7 @@ export async function POST(request: NextRequest) {
     const file: File | null = formData.get("file") as unknown as File;
     const data = formData.get("data") as unknown as string;
     const parsedData: CreateListingData = JSON.parse(data);
-    const currnetUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
     if (!file) {
       return NextResponse.json("Image not exist", { status: 401 });
     }
@@ -43,7 +40,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json("Incorrect form values", { status: 401 });
     }
 
-    if (!currnetUser) {
+    if (!currentUser) {
       return NextResponse.json("Authorization required", { status: 401 });
     }
 
@@ -61,7 +58,7 @@ export async function POST(request: NextRequest) {
       process.env.CLOUDINARY_CLOUD_API_KEY as string
     );
 
-    imageFormData.append("upload_preset", "likq3xc2");
+    imageFormData.append("upload_preset", process.env.CLOUDINARY_PRESET || "");
 
     const res = await axios.request<{ url: string }>({
       url: `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -80,11 +77,11 @@ export async function POST(request: NextRequest) {
         price: Number(parsedData.price),
         roomCount: Number(parsedData.roomCount),
         locationValue: parsedData.location?.value || "",
-        userId: currnetUser.id,
+        userId: currentUser.id,
       },
     });
 
-    return NextResponse.json("Listing succesfully created");
+    return NextResponse.json("Listing successfully created");
   } catch (error) {
     console.log(error);
     return NextResponse.json("Internal server error", { status: 500 });
